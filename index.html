@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Book Library</title>
+</head>
+<body>
+
+<h2>Add Book</h2>
+<form id="bookForm">
+  <input type="text" id="title" placeholder="Title" required />
+  <input type="text" id="author" placeholder="Author" required />
+  <input type="text" id="genre" placeholder="Genre" required />
+  <input type="number" id="rating" placeholder="Rating (1-5)" step="0.1" />
+  <button type="submit">Add Book</button>
+</form>
+
+<hr>
+
+<h2>Search & Filter</h2>
+
+<input type="text" id="filterGenre" placeholder="Filter by Genre" />
+<input type="number" id="filterRating" placeholder="Min Rating" step="0.1" />
+<input type="number" id="limit" placeholder="Books per page" value="5" />
+
+<button onclick="fetchBooks()">Search</button>
+
+<br><br>
+
+<button onclick="prevPage()">Previous</button>
+<span id="pageInfo"></span>
+<button onclick="nextPage()">Next</button>
+
+<hr>
+
+<h2>All Books</h2>
+<ul id="bookList"></ul>
+
+<script>
+const API_URL = "http://localhost:5000/books";
+
+let currentPage = 1;
+let totalPages = 1;
+
+// ========================
+// ADD BOOK
+// ========================
+document.getElementById("bookForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const book = {
+    title: document.getElementById("title").value,
+    author: document.getElementById("author").value,
+    genre: document.getElementById("genre").value,
+    rating: document.getElementById("rating").value
+      ? Number(document.getElementById("rating").value)
+      : undefined
+  };
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(book)
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data.message || "Error adding book");
+    return;
+  }
+
+  alert(data.message);
+
+  document.getElementById("bookForm").reset();
+  fetchBooks();
+});
+
+// ========================
+// FETCH BOOKS
+// ========================
+async function fetchBooks() {
+  const genre = document.getElementById("filterGenre").value;
+  const rating = document.getElementById("filterRating").value;
+  const limit = document.getElementById("limit").value || 5;
+
+  let url = `${API_URL}?page=${currentPage}&limit=${limit}`;
+
+  if (genre) url += `&genre=${genre}`;
+  if (rating) url += `&rating=${rating}`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  totalPages = data.totalPages || 1;
+
+  const list = document.getElementById("bookList");
+  list.innerHTML = "";
+
+  if (data.books.length === 0) {
+    list.innerHTML = "<li>No books found</li>";
+    return;
+  }
+
+  data.books.forEach(book => {
+    const li = document.createElement("li");
+    li.innerText =
+      `${book.title} - ${book.author} (${book.genre}) ⭐ ${book.rating || "N/A"}`;
+    list.appendChild(li);
+  });
+
+  document.getElementById("pageInfo").innerText =
+    `Page ${currentPage} of ${totalPages}`;
+}
+
+// ========================
+// PAGINATION
+// ========================
+function nextPage() {
+  if (currentPage < totalPages) {
+    currentPage++;
+    fetchBooks();
+  }
+}
+
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    fetchBooks();
+  }
+}
+
+// Initial Load
+fetchBooks();
+</script>
+
+</body>
+</html>

@@ -103,7 +103,8 @@ app.get("/books/:id", async (req, res) => {
     res.status(500).json({ message: "Invalid ID" });
   }
 });
-
 app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
+app.use("/api/auth", require("./routes"));
+require("dotenv").config();

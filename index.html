@@ -13,9 +13,7 @@
 
 <h1>📚 Book Library</h1>
 
-<!-- ========================= -->
 <!-- AUTH SECTION -->
-<!-- ========================= -->
 <div id="authSection">
   <h2>Signup</h2>
   <input type="text" id="signupUsername" placeholder="Username">
@@ -32,9 +30,7 @@
 
 <hr>
 
-<!-- ========================= -->
 <!-- BOOK SECTION -->
-<!-- ========================= -->
 <div id="bookSection" style="display:none;">
 
 <h2>Add Book</h2>
@@ -74,9 +70,7 @@ const AUTH_API = "http://localhost:5000/api/auth";
 let currentPage = 1;
 let totalPages = 1;
 
-// ========================
 // AUTH FUNCTIONS
-// ========================
 async function signup() {
   const username = document.getElementById("signupUsername").value;
   const password = document.getElementById("signupPassword").value;
@@ -117,10 +111,7 @@ function logout() {
   localStorage.removeItem("token");
   updateUI();
 }
-
-// ========================
 // UI CONTROL
-// ========================
 function updateUI() {
   const token = localStorage.getItem("token");
 
@@ -136,9 +127,7 @@ function updateUI() {
   }
 }
 
-// ========================
 // ADD BOOK
-// ========================
 document.getElementById("bookForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -169,9 +158,7 @@ document.getElementById("bookForm").addEventListener("submit", async (e) => {
   fetchBooks();
 });
 
-// ========================
 // FETCH BOOKS
-// ========================
 async function fetchBooks() {
   const genre = document.getElementById("filterGenre").value;
   const rating = document.getElementById("filterRating").value;
@@ -205,9 +192,7 @@ async function fetchBooks() {
     `Page ${currentPage} of ${totalPages}`;
 }
 
-// ========================
 // PAGINATION
-// ========================
 function nextPage() {
   if (currentPage < totalPages) {
     currentPage++;
@@ -228,3 +213,4 @@ updateUI();
 
 </body>
 </html>>
+

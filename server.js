@@ -7,21 +7,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ========================
 // MongoDB Connection
-// ========================
 mongoose.connect("mongodb://127.0.0.1:27017/bookdb")
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
-// ========================
 // Book Model
-// ========================
 const Book = require("./Book");
 
-// ========================
 // ADD BOOK
-// ========================
 app.post("/books", async (req, res) => {
   try {
     const { title, author, genre, rating } = req.body;
@@ -51,9 +45,7 @@ app.post("/books", async (req, res) => {
   }
 });
 
-// ========================
 // GET ALL BOOKS (Pagination + Filter)
-// ========================
 app.get("/books", async (req, res) => {
   try {
     const { page = 1, limit = 10, genre, rating } = req.query;
@@ -86,9 +78,7 @@ app.get("/books", async (req, res) => {
   }
 });
 
-// ========================
 // GET SINGLE BOOK
-// ========================
 app.get("/books/:id", async (req, res) => {
   try {
     const book = await Book.findById(req.params.id);
@@ -108,3 +98,4 @@ app.listen(5000, () => {
 });
 app.use("/api/auth", require("./routes"));
 require("dotenv").config();
+

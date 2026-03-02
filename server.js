@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -97,5 +98,5 @@ app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
 app.use("/api/auth", require("./routes"));
-require("dotenv").config();
+
 
